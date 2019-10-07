@@ -1,0 +1,22 @@
+---- openpyxl ----
+
+-- sample code --
+
+    import openpyxl
+
+    wb = openpyxl.load_workbook('Book1.xlsx')
+    sheet = wb.get_sheet_by_name('Sheet1')
+--
+
+-- sample functions --
+
+    sheet.cells(a,1).value
+
+    wb.save('Book1.xlsx')
+
+--
+
+
+------------------
+
+

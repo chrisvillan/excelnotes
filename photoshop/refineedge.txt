@@ -1,0 +1,14 @@
+--Adjust Edge--
+
+Smooth - smooths out line selection 
+Feather - adds fade to the edge of selection
+Contrast - makes selection harder
+Shift Edge - Negative value, shifts edge inward. Positive value, shifts edge outward.
+
+Edge Detection 
+Check smart radius.
+Radius - the px value is the amount of pixels it looks at each direction of edge. Brush over edge to refine edge with smart radius. Looks for high contrast edges to select. Main use is for hair.
+- The disadvantage of this is that if the edge is selected well already, it'll add a HAZE if refined again. 
+
+
+

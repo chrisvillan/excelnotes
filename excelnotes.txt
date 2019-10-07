@@ -1,0 +1,8 @@
+---- VBA ----
+
+Form vs ActiveX Controls
+
+- Forms are simple controls: assign macro, format controls
+- ActiveX have more advance features: properties, mutliple event triggers
+
+-------------
