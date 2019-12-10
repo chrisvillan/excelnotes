@@ -6,3 +6,27 @@ Form vs ActiveX Controls
 - ActiveX have more advance features: properties, mutliple event triggers
 
 -------------
+
+
+--Rows--
+rn = rownum
+
+\/ all inserts above rn 
+
+Rows([rn]).Insert
+
+Range("[rn]:[rn]").Insert
+//rn can be different nums
+
+Range("[cell]").EntireRow.Insert
+
+--Color--
+Range([cell]).Interior.ColorIndex
+//returns cell's color index
+
+Range([cell]).Font.ColorIndex
+//Returns font color
+
+--Font--
+Range([cell]).Font.Strikethrough
+//Returns True/False if strikethrough
