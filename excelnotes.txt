@@ -28,5 +28,7 @@ Range([cell]).Font.ColorIndex
 //Returns font color
 
 --Font--
+https://docs.microsoft.com/en-us/office/vba/api/excel.font(object)
+
 Range([cell]).Font.Strikethrough
 //Returns True/False if strikethrough
