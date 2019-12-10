@@ -21,14 +21,53 @@ Range("[rn]:[rn]").Insert
 Range("[cell]").EntireRow.Insert
 
 --Color--
-Range([cell]).Interior.ColorIndex
+Range("[cell]").Interior.ColorIndex
 //returns cell's color index
 
-Range([cell]).Font.ColorIndex
+Range("[cell]").Font.ColorIndex
 //Returns font color
 
 --Font--
 https://docs.microsoft.com/en-us/office/vba/api/excel.font(object)
 
-Range([cell]).Font.Strikethrough
+Range("[cell]").Font.Strikethrough
 //Returns True/False if strikethrough
+
+--Copy--
+Range("[cell1]").Copy Range("[cell2]")
+//Copies cell1 and paste to cell2
+
+
+--Loops--
+For i=1 To 10
+  ....
+Next i
+
+For Each wSheet in Worksheets
+  ...
+Next wSheet
+//wSheet = object, Worksheets=objectset
+
+Exit For 
+//Exits for loop 
+
+
+Do While i<10
+...
+Loop
+
+Do
+....
+Loop While i<10
+
+Do Until IsEmpty(Cells(i,1))
+...
+Loop
+//stops until row is empty
+
+Do
+...
+Loop Until IsEmpty(Cells(i,1))
+
+
+
