@@ -1,0 +1,17 @@
+Sub FillColumn()
+    Dim row As Integer, col As Integer, target As String, iteration As Integer
+    
+    row = ActiveCell.row
+    col = ActiveCell.Column
+    iteration = InputBox("How many rows to check?")
+    
+    For i = 1 To iteration
+        If Cells(row, col).Interior.ColorIndex <> xlNone Then
+            target = Cells(row, col)
+        Else
+            Cells(row, col) = target
+        End If
+        row = row + 1
+    Next i
+    
+End Sub
