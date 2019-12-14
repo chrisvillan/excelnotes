@@ -1,17 +1,24 @@
-Sub FillColumn()
+Sub FillColumnOnSelect()
     Dim row As Integer, col As Integer, target As String, iteration As Integer
+    Dim myRange As String, x As Variant, firstrow As Integer, lastrow As Integer
+
+    myRange = Selection.Address
+
+    x = InStr(myRange, ":")
+    firstrow = Mid(myRange, 4, x - 4)
+    lastrow = Right(myRange, Len(myRange) - (x + 3))
     
-    row = ActiveCell.row
-    col = ActiveCell.Column
-    iteration = InputBox("How many rows to check?")
+    iteration = lastrow - firstrow
+    row = firstrow
+    col = Selection.Column
     
-    For i = 1 To iteration
-        If Cells(row, col).Interior.ColorIndex <> xlNone Then
+    For I = 1 To iteration
+        If Not IsEmpty(Cells(row, col)) Then
             target = Cells(row, col)
         Else
             Cells(row, col) = target
         End If
         row = row + 1
-    Next i
+    Next I
     
 End Sub
