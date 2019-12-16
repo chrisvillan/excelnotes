@@ -1,0 +1,17 @@
+Sub SelectColumn()
+
+Dim myRange As Range, x As Variant, row As Integer, lastrow As Integer, col As Integer
+
+row = 2
+col = ActiveCell.Column
+
+For i = 0 To 300
+    If Cells(row, col).Interior.ColorIndex = 23 Then
+    lastrow = row
+    End If
+    row = row + 1
+Next i
+
+Range(Cells(2, col), Cells(lastrow - 1, col)).Select
+
+End Sub
