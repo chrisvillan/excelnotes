@@ -1,0 +1,95 @@
+Sub QCType1()
+
+Dim mark() As String, element As Variant, result() As Variant, row As Integer, marked As Boolean, newrow As Boolean
+
+mark = Split(Cells(3, 1).Value, ",")
+marked = False
+row = 3
+newrow = True
+'for each row
+For Each element In mark
+    MsgBox (element)
+    result = FindMarker(Int(element))
+    If result(0) = True Then
+        marked = CheckMarker(CStr(result(1)), row, newrow)
+        newrow = False
+    End If
+Next element
+
+End Sub
+
+
+
+Function CheckMarker(marker As String, row As Integer, newrow As Boolean) As Boolean
+
+Dim markcol As Integer, marked As Boolean
+markcol = 2
+marked = False
+
+Do While Not IsEmpty(Cells(1, markcol))
+
+    If newrow = True Then
+        If Cells(row, markcol) = "x" Then
+            Cells(row, markcol).Interior.ColorIndex = 3
+        End If
+    End If
+    
+    If Cells(1, markcol) = marker Then
+        If Cells(row, markcol) = "x" Then
+            Cells(row, markcol).Interior.ColorIndex = xlNone
+            marked = True
+        Else
+            Cells(row, markcol).Interior.ColorIndex = 7
+        End If
+    End If
+    
+    markcol = markcol + 1
+Loop
+
+CheckMarker = marked
+
+End Function
+
+
+
+Function FindMarker(mark As String) As Variant
+
+Dim row As Integer, col As Integer, returnarray(2) As Variant, match As Boolean, marker As String
+
+row = 9
+col = 2
+match = False
+marker = "No match"
+
+Do
+row = row + 1
+If Cells(row, col) = mark Then
+    match = True
+    marker = Cells(row, col - 1)
+End If
+Loop While Not IsEmpty(Cells(row, col - 1))
+
+returnarray(0) = match
+returnarray(1) = marker
+
+FindMarker = returnarray
+
+End Function
+
+
+_________A__________B________C________D________E________F________G____
+1  |           | Mark 1 | Mark 2 | Mark 3 | Mark 4 | Mark 5 | Mark 6 |
+2  |1, 5, 4    |   x    |   x    |        |   x    |        |        |
+3  |1,3,6      |        |        |        |        |        |        |
+4  |           |        |        |        |        |        |        |
+5  |           |        |        |        |        |        |        |
+6  |           |        |        |        |        |        |        |
+7  |           |        |        |        |        |        |        |
+8  |           |        |        |        |        |        |        |
+9  |           |        |        |        |        |        |        |
+10 |  Mark 1   |    1   |        |        |        |        |        |
+11 |  Mark 2   |    2   |        |        |        |        |        |
+12 |  Mark 3   |    3   |        |        |        |        |        |
+13 |  Mark 4   |    4   |        |        |        |        |        |
+14 |  Mark 5   |    5   |        |        |        |        |        |
+15 |  Mark 6   |    6   |        |        |        |        |        |
