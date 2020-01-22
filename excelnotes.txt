@@ -71,3 +71,53 @@ Loop Until IsEmpty(Cells(i,1))
 
 
 
+------ARRAYS------
+Function Test() As Variant
+//Returns variant or array
+
+Dim A([start] To [end]) As [DataType]
+//Ex: Dim A(1 to 5) As String)
+
+A(1) = "A"
+A(2) = "B"
+...
+//Assigning array elements
+
+
+Dim A( [start1] To [end1] , [start2] To [end2] ) As [DataType]
+/Two dimensional array
+
+---Appending to array----
+
+ReDim Presevere A([num])
+A[num] = [data]
+// basic way to resize array and add
+
+ReDim Preserve A(Ubound(A) + 1)
+A(Ubound(A) = [data]
+//Good way to set up loop to append
+
+//BIG NOTE: Cannot change dimension of intialized array
+
+Dim arr(1) As String
+arr(0) = string1
+arr(1) = string 2
+
+Redim preserve arr(2)
+//Gives error
+
+
+----Using .net framework for arrays ----
+
+Set A = CreateObject("System.Collections.ArrayList")
+A.Add [data]
+A.Add [data2]
+...
+A.Sort
+A.Remove [data]
+//Better way to store array and sort, remove
+
+
+
+
+
