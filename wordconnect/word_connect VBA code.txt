@@ -22,7 +22,8 @@ expoPath = currentdir & "\word_connect.pdf"
 Debug.Print (docPath)
 
 WordApp.Visible = True
-Set doc = WordApp.Documents.Open(docPath, , True)
+Set doc = WordApp.Documents.Open(Filename:=docPath, PasswordDocument:="lock")
+
 
 Set rng_name = doc.Bookmarks("name").Range
 rng_name.Text = Range("B1")
