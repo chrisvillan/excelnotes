@@ -1,0 +1,42 @@
+Instructions:
+In Excel: VBA Code -> Tools -> References
+Enable “Microsoft Word 16.0 Object Library”
+In Word: Create bookmarks by Insert -> Links -> Bookmark
+
+Sub MyMacro()
+
+Dim currentdir As String
+Dim WordApp As New Word.Application
+Dim doc As Word.Document
+
+Dim rng_name As Word.Range
+Dim rng_date As Word.Range
+Dim rng_zip As Word.Range
+
+Dim docPath As String, expoPath As String
+expoPath = currentdir & Range("B2") & ".pdf"
+
+currentdir = ActiveWorkbook.Path
+docPath = currentdir & "\word_connect.docx"
+expoPath = currentdir & "\word_connect.pdf"
+Debug.Print (docPath)
+
+WordApp.Visible = True
+Set doc = WordApp.Documents.Open(docPath, , True)
+
+Set rng_name = doc.Bookmarks("name").Range
+rng_name.Text = Range("B1")
+
+Set rng_date = doc.Bookmarks("date").Range
+rng_date.Text = Format(Range("B2"), "MMMM dd, yyyy")
+
+Set rng_zip = doc.Bookmarks("zipcode").Range
+rng_zip.Text = Range("B3")
+
+
+doc.ExportAsFixedFormat expoPath, wdExportFormatPDF
+WordApp.ActiveDocument.Close SaveChanges:=wdDoNotSaveChanges
+WordApp.Quit
+Set doc = Nothing
+
+End Sub
