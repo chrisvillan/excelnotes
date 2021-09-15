@@ -1,3 +1,5 @@
+***MUST BE A MODULE***
+
 Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 Declare PtrSafe Function SetCursorPos Lib "user32" (ByVal x As Integer, ByVal y As Integer) As Long
 Declare PtrSafe Sub mouse_event Lib "user32" (ByVal dwFlags As Long, ByVal dx As Long, ByVal dy As Long, ByVal dwData As Long, ByVal dwExtraInfo As Long)
