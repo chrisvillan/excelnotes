@@ -1,0 +1,277 @@
+Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+Declare PtrSafe Function SetCursorPos Lib "user32" (ByVal x As Integer, ByVal y As Integer) As Long
+Declare PtrSafe Sub mouse_event Lib "user32" (ByVal dwFlags As Long, ByVal dx As Long, ByVal dy As Long, ByVal dwData As Long, ByVal dwExtraInfo As Long)
+'https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mouse_event
+'dwFlags Controls various aspects of mouse motion and button clicking. This parameter can be certain combinations of the following values.
+'dx The mouse's absolute position along the x-axis or its amount of motion since the last mouse event was generated
+'dy The mouse's absolute position along the y-axis or its amount of motion since the last mouse event was generated
+'cButtons If dwFlags contains MOUSEEVENTF_XDOWN or MOUSEEVENTF_XUP, then dwData specifies which X buttons were pressed or released. This value may be any combination of the following flags.
+'dwExtraInfo An additional value associated with the mouse event. An application calls GetMessageExtraInfo to obtain this extra information.
+
+Public Const MOUSEEVENTF_LEFTDOWN = &H2
+Public Const MOUSEEVENTF_LEFTUP = &H4
+Public Const MOUSEEVENTF_RIGHTDOWN As Long = &H8
+Public Const MOUSEEVENTF_RIGHTUP As Long = &H10
+
+Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+
+Public copyObj As New DataObject
+Public currRow As Integer
+
+Type POINTAPI
+    Xcoord As Long
+    Ycoord As Long
+End Type
+Sub Global_Row()
+    Dim
+End Sub
+Sub MainCall()
+
+    currRow = 2
+    Do While Cells(currRow, 1) <> ""
+        If Cells(currRow, 1) = "Left Click" Then
+            Delay (currRow)
+            LeftClick Cells(currRow, 3), Cells(currRow, 4)
+        ElseIf Cells(currRow, 1) = "Right Click" Then
+            Delay (currRow)
+            RightClick Cells(currRow, 3), Cells(currRow, 4)
+        ElseIf Cells(currRow, 1) = "Double Click" Then
+            Delay (currRow)
+            DoubleClick Cells(currRow, 3), Cells(currRow, 4)
+        ElseIf Cells(currRow, 1) = "Copy" Then
+            Delay (currRow)
+            Copy Cells(currRow, 3), Cells(currRow, 4), currRow
+        ElseIf Cells(currRow, 1) = "ClickPaste" Then
+            Delay (currRow)
+            ClickPaste Cells(currRow, 3), Cells(currRow, 4), currRow
+        ElseIf Cells(currRow, 1) = "ClickType" Then
+            Delay (currRow)
+            ClickPaste Cells(currRow, 3), Cells(currRow, 4), currRow
+        Else
+            MsgBox "Error"
+            End
+        End If
+        
+        
+        currRow = currRow + 1
+    Loop
+End Sub
+
+Sub LeftClick(x As Integer, y As Integer)
+    SetCursorPos x, y 'x and y position
+    mouse_event MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0
+    mouse_event MOUSEEVENTF_LEFTUP, 0, 0, 0, 0
+End Sub
+
+Sub RightClick(x As Integer, y As Integer)
+    SetCursorPos x, y 'x and y position
+    mouse_event MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0
+    mouse_event MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0
+End Sub
+
+Sub DoubleClick(x As Integer, y As Integer)
+    SetCursorPos x, y
+    mouse_event MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0
+    mouse_event MOUSEEVENTF_LEFTUP, 0, 0, 0, 0
+    mouse_event MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0
+    mouse_event MOUSEEVENTF_LEFTUP, 0, 0, 0, 0
+End Sub
+
+Sub Copy(x As Integer, y As Integer, row As Integer)
+    Dim txt As String
+    txt = Cells(row, 5)
+    
+    'fixes TRUE/FALSE uppercase
+    If VarType(Cells(row, 5)) = 11 Then
+        If Cells(row, 5) = "False" Then
+            txt = "FALSE"
+        ElseIf Cells(row, 5) = "True" Then
+            txt = "TRUE"
+        End If
+    End If
+    
+    copyObj.SetText txt
+    copyObj.PutInClipboard
+End Sub
+
+Sub ClickPaste(x As Integer, y As Integer, row As Integer)
+    Copy x, y, row
+    LeftClick x, y
+    SendKeys "^v", True
+End Sub
+
+Sub ClickType(x As Integer, y As Integer, row As Integer)
+    Dim txt As String
+    
+    Copy x, y, row
+    LeftClick x, y
+    copyObj.GetFromClipboard
+    txt = CStr(copyObj.GetText(1))
+    SendKeys txt, True
+End Sub
+
+Sub Delay(eventRow As Integer)
+    Dim sleepNum As Integer
+    sleepNum = Cells(eventRow, 2)
+    Sleep sleepNum
+End Sub
+'Sub SendKeys()
+'    Dim Program As String
+'    Program = "calc.exe"
+'    AppActivate "Calculator"
+'    SendKeys "123"
+'End Sub
+Sub MouseMove()
+
+Dim StartTime As Double
+Dim SecondsElapsed As Double
+Dim MinutesElapsed As String
+Dim myCoord As POINTAPI
+
+
+StartTime = Timer
+StartTime1 = Timer
+GetCursorPos myCoord
+x2 = myCoord.Xcoord
+y2 = myCoord.Ycoord
+Worksheets("Sheet1").Range("B31:B36").Value = ""
+If Worksheets("Sheet1").Range("B37").Value = "" Then
+    Worksheets("Sheet1").Range("B37").Value = "12:01:00 AM"
+End If
+Worksheets("Sheet1").Range("B37").NumberFormat = "hh:mm:ss"
+
+SecondsToActivate = Worksheets("Sheet1").Range("B37").Value
+SecondsToActivate = Hour(SecondsToActivate) * 3600 + Minute(SecondsToActivate) * 60 + Second(SecondsToActivate)
+
+counter = 0
+
+Range("D37") = True
+
+Do While Range("D37") = True
+
+DoEvents
+
+GetCursorPos myCoord
+x1 = myCoord.Xcoord
+y1 = myCoord.Ycoord
+
+If x1 <> x2 Or y1 <> y2 Then
+    StartTime = Timer
+    Worksheets("Sheet1").Range("B34").Interior.ColorIndex = xlNone
+End If
+
+SecondsElapsed = Round(Timer - StartTime, 2)
+MinutesElapsed = Format(((Timer - StartTime) - 0.5) / 86400, "hh:mm:ss")
+
+Worksheets("Sheet1").Range("B31").Value = "X: " & myCoord.Xcoord & " Y: " & myCoord.Ycoord
+Worksheets("Sheet1").Range("B32").Value = MinutesElapsed
+Worksheets("Sheet1").Range("B33").Value = SecondsElapsed
+Worksheets("Sheet1").Range("B34").Value = Format(((SecondsToActivate - SecondsElapsed) + 0.5) / 86400, "hh:mm:ss")
+Worksheets("Sheet1").Range("B35").Value = counter
+Worksheets("Sheet1").Range("B36").Value = Format(((Timer - StartTime1) - 0.5) / 86400, "hh:mm:ss")
+
+If SecondsElapsed < SecondsToActivate * 0.7 Then
+    Worksheets("Sheet1").Range("B34").Font.Color = RGB(0, 0, 255)
+ElseIf SecondsElapsed >= SecondsToActivate * 0.7 And SecondsElapsed < SecondsToActivate * 0.8 Then
+    Worksheets("Sheet1").Range("B34").Interior.ColorIndex = 6
+    Worksheets("Sheet1").Range("B34").Font.Color = RGB(0, 0, 255)
+ElseIf SecondsElapsed >= SecondsToActivate * 0.8 And SecondsElapsed < SecondsToActivate * 0.9 Then
+    Worksheets("Sheet1").Range("B34").Interior.ColorIndex = 46
+    Worksheets("Sheet1").Range("B34").Font.Color = RGB(0, 0, 255)
+ElseIf SecondsElapsed >= SecondsToActivate * 0.9 And SecondsElapsed < SecondsToActivate * 0.95 Then
+    Worksheets("Sheet1").Range("B34").Interior.ColorIndex = 3
+    Worksheets("Sheet1").Range("B34").Font.Color = RGB(255, 255, 255)
+ElseIf SecondsElapsed >= SecondsToActivate * 0.95 Then
+    If SecondsElapsed Mod 2 = 0 Then
+        Worksheets("Sheet1").Range("B34").Interior.ColorIndex = xlNone
+        Worksheets("Sheet1").Range("B34").Font.Color = RGB(255, 0, 0)
+    ElseIf SecondsElapsed Mod 2 <> 0 Then
+        Worksheets("Sheet1").Range("B34").Interior.ColorIndex = 3
+        Worksheets("Sheet1").Range("B34").Font.Color = RGB(255, 255, 255)
+    End If
+End If
+
+If SecondsElapsed >= SecondsToActivate Then
+    Worksheets("Sheet1").Range("B34").Interior.ColorIndex = xlNone
+    Worksheets("Sheet1").Range("B34").Font.Color = RGB(0, 0, 255)
+    For i = 1 To 500
+        For j = 1 To 100
+            SetCursorPos x1 + j, y1
+        Next j
+        For j = 99 To 0 Step -1
+            SetCursorPos x1 + j, y1
+        Next j
+    Next i
+    mouse_event MOUSEEVENTF_LEFTDOWN, 0&, 0&, 0&, 0&
+    Sleep 100
+    mouse_event MOUSEEVENTF_LEFTUP, 0&, 0&, 0&, 0&
+    Sleep 100
+'    SendKeys "{NUMLOCK}", True
+'    Sleep 100
+'    SendKeys "{NUMLOCK}", True
+'    Sleep 100
+    StartTime = Timer
+    counter = counter + 1
+End If
+
+GetCursorPos myCoord
+x2 = myCoord.Xcoord
+y2 = myCoord.Ycoord
+
+Sleep 250
+
+Loop
+
+End Sub
+
+Sub GetSetMousePos()
+
+Dim myCoord As POINTAPI
+Dim coordStr As String
+
+
+GetCursorPos myCoord
+
+coordStr = myCoord.Xcoord & ", " & myCoord.Ycoord
+
+SetCursorPos 2018, 532
+Debug.Print (coordStr)
+RightClick 2018, 532
+
+
+End Sub
+
+
+-------MODULE 2------
+Sub EndGetMouse_Click()
+    If Range("D37") = True Then
+        Range("D37") = False
+    End If
+End Sub
+
+Sub RowReference_Click()
+    Debug.Print (currRow)
+End Sub
+
+Sub RunGetMouse_Click()
+    MouseMove
+End Sub
+
+Sub RunHotKeys_Click()
+    MainCall
+End Sub
+
+Sub SpinButton1_Change()
+    TextBox1.Text = SpinButton1.Value
+End Sub
+
+Sub TextBox1_Change()
+    Dim newVal As Integer
+    
+    TextBox1.TextAlign = fmTextAlignCenter
+
+    newVal = Val(TextBox1.Text)
+    SpinButton1.Value = newVal
+End Sub
+
+
