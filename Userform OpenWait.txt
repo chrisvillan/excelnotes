@@ -1,0 +1,17 @@
+--Sheet--
+Sub MyMacroTest()
+  UserForm1.Show
+End Sub
+
+--UserForm--
+Private Sub UserForm_Initialize()
+  dTime = Time + TimeValue("00:00:01")
+  Application.OnTime dTime, "KillUserForm"
+End Sub
+
+--Module--
+
+Public dTime As Date
+Sub KillUserForm()
+  Unload UserForm1
+End Sub
