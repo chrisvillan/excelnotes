@@ -1,0 +1,31 @@
+Sub ResizeRange()
+
+
+Dim arr() As String
+Dim newSize As Integer
+Dim rng As Range
+Dim rngstr As String
+
+For i = 1 To 3
+    newSize = newSize + 1
+Next i
+
+'Cant resize array multiple times
+ReDim arr(1 To newSize)
+    
+    
+arr(1) = "A:A"
+arr(2) = "C:C"
+arr(3) = "E:E"
+
+
+
+Set rng = Range(arr(1))
+For i = 2 To UBound(arr)
+    Set rng = Union(rng, Range(arr(i)))
+Next
+
+rng.Select
+
+End Sub
+
