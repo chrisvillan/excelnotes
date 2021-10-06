@@ -1,0 +1,143 @@
+
+Dim path As String
+Dim arr1() As Variant, arr2() As Variant, arr3 As Variant, arr4() As Variant
+Dim lvl2path As String, lvl3path as String, lvl4path As String
+Dim oldname As String, newname As String
+
+
+‘Project directory
+path = ActiveWorkbook.path &”\”
+
+arr1 = ReturnFolders(path)
+
+
+ For i = 1 to len(arr1)
+     ‘Count level 2
+     lvl2path = path & arr1(i) & “\”)
+     arr2 = ReturnFolders(lvl2path)
+  
+     For j =1 to len(arr2)
+             ‘Count level 3 
+              lvl3path = lvl2path & arr2(j) & “\”
+              arr3 = ReturnFolders(lvl3path)
+              If arr3(1) = “No Folders”
+                  arr3 = ReturnXLS(lvl3path)
+                  For f = 1 to len(arr3)
+                      oldname = lvl3path & arr3(f)
+                      newname = lvl3path & GetNewName(arr3(f))
+                      Name oldname As newname 
+              Else
+              
+              For k =1 to len(arr3)
+              lvl4path = lvl3path & arr3(k) & “\”
+              arr4 = ReturnXLS(lvl4path)
+              If arr4(1) = “No Folders”
+                   arr4 = ReturnXLS(lvl4path)
+                  For f = 1 to len(arr4)
+                      oldname = lvl4path & arr4(f)
+                      newname = lvl4path & GetNewName(arr4(f))
+                      Name oldname As newname  
+              Else
+              ‘Error
+              
+              End if
+
+
+
+
+
+      Next j
+     
+    
+
+
+
+
+
+
+Next i 
+
+
+Function CountFolders(path As String) As Integer
+Dim folderstr As String
+Dim count as integer
+
+folderstr = Dir(path, vbDirectory)
+count =0
+Do while folderstr <> “”
+     If folderstr <>”.” And folderstr <> “..” then
+     count = count + 1
+     End if
+     folderstr = Dir()
+Loop
+
+CountFolders = count
+End Function
+
+Function ReturnFolders(path as String) As Variant
+Dim tempArr as Variant 
+Dim folderstr As String
+Dim f as integer 
+Dim count as Integer
+
+count = CountFolders(path)
+
+If count <> 0 then 
+
+ReDim tempArr(count)
+
+folderstr = Dir(path, vbDirectory)
+f =1
+Do while folderstr <> “” 
+     If folderstr <>”.” And folderstr <> “..” then 
+         tempArr(f) = folderstr
+         f = f+1
+     End if
+     folderstr = Dir()
+Loop
+
+ReturnFolders = tempArr 
+
+
+Else 
+ReDim tempArr(1)
+tempArr(1) = “No Folders”
+ReturnFolders = tempArr
+End if
+End Function
+
+Function ReturnXLS(path As String) As Variant
+
+Dim tempArr as Variant 
+Dim filestr As String
+Dim f as integer 
+Dim count as Integer
+
+count = CountFolders(path)
+
+ReDim tempArr(count)
+
+filestr = Dir(path & “*.xls*”)
+f =1
+Do while filestr <> “”
+     tempArr(f) = filestr
+     f = f+1
+     filestr = Dir()
+Loop
+
+ReturnXLS = tempArr 
+
+End Function
+
+Function GetNewName(filestr as String) as String
+Dim temp as String
+If filestr = “Sample 1.xls” then
+    temp = “Smp 1.xls”
+elseif filestr = “Sample 2” then
+    temp = “Smp 2”
+end if
+
+NewName = temp
+
+
+End Function
