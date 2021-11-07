@@ -1,0 +1,5 @@
+- Need to add lines if docs are different/docs have different line number
+
+- Add "please close all word doc validation"
+
+- Error handling when debug stops, word doesn't close
