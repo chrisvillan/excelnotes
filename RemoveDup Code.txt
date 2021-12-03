@@ -1,0 +1,74 @@
+Sub RemoveDupCol()
+    Dim colstart As Integer
+    Dim temparr As Variant
+    Dim myarr As Variant
+    Dim size As Integer
+    Dim arrcount As Integer
+    Dim endcol As Integer
+    
+    colstart = 7
+    
+    'iterate rows
+    For row = 2 To 50
+        DoEvents
+        endcol = Cells(row, colstart).End(xlToRight).Column
+        'iterate column and add vals to temparr
+        size = endcol - colstart + 1
+        ReDim temparr(size)
+        arrcount = 0
+        For col = colstart To endcol
+            temparr(arrcount) = Cells(row, col).Value
+            arrcount = arrcount + 1
+        Next col
+
+        myarr = RemoveDup(temparr)
+
+        'clears
+        For col = colstart To endcol
+            Cells(row, col).Clear
+        Next col
+
+        'writes new array
+        arrcount = 0
+        For col = colstart To colstart + UBound(myarr)
+            Cells(row, col).Value = myarr(arrcount)
+            arrcount = arrcount + 1
+        Next col
+
+    Next row
+End Sub
+
+Function RemoveDup(myarr As Variant) As Variant
+
+    Dim temparr As Variant
+    Dim size As Integer
+    Dim arrcount As Integer
+    
+    size = UBound(myarr)
+    For i = 0 To UBound(myarr)
+        For j = 0 To UBound(myarr)
+            If myarr(i) = myarr(j) And i <> j And myarr(j) <> "-" Then
+                myarr(j) = "-"
+                size = size - 1
+            End If
+        Next j
+    Next i
+    
+        
+    ReDim temparr(size)
+    arrcount = 0
+    For i = 0 To UBound(myarr)
+        If myarr(i) <> "-" Then
+            temparr(arrcount) = myarr(i)
+            arrcount = arrcount + 1
+        End If
+    Next i
+    
+    RemoveDup = temparr
+End Function
+
+
+
+
+
+
